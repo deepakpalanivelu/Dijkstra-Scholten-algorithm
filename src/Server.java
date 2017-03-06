@@ -20,14 +20,12 @@ public class Server {
 	}
 
 	public void run (int port, Clock clock ,Tree tree) throws InterruptedException {
-
 		final Clock clock1 = clock;
 		final Tree tree1 = tree;
 		ServerBootstrap server = new ServerBootstrap();
 		server.group(bossGroup,workerGroup);
 		server.channel(NioServerSocketChannel.class);
 		server.childHandler(new ChannelInitializer<SocketChannel>() {
-
 			@Override
 			protected void initChannel(SocketChannel ch) throws Exception {
 				// TODO Auto-generated method stub
@@ -36,7 +34,6 @@ public class Server {
 		});
 		server.option(ChannelOption.SO_BACKLOG, 128);
 		server.childOption(ChannelOption.SO_KEEPALIVE, true);
-
 		future = server.bind(port).sync();
 		if(future.isSuccess()) {
 			System.out.println("Server with port number " +port +" started");
