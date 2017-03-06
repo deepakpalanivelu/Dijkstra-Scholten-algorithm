@@ -8,15 +8,15 @@ public class ClientHandler extends SimpleChannelInboundHandler<Message> {
 	Tree tree;
 	ClientHandler(Tree tree) {
 		this.tree = tree;
-
 	}
+
 	@Override
 	public void channelRead0(ChannelHandlerContext ctx, Message msg) throws Exception {
 		// TODO Auto-generated method stub
 		System.out.println("ACK RECIEVED FROM" + msg.getSender()+ "is"+ msg.getMessage() );
 		tree.setAckCount(tree.getAckCount() + 1);
-
 	}
+
 	@Override
 	public void channelActive(ChannelHandlerContext ctx) throws Exception {
 		// TODO Auto-generated method stub
