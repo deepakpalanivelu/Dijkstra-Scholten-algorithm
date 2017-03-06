@@ -15,24 +15,24 @@ import io.netty.handler.codec.serialization.ObjectEncoder;
 
 public class Client {
 
-	Message data;
-	private Map<Integer,ChannelFuture> channelMap; 
+	Message message;
+	private Map<Integer,ChannelFuture> channelMap;
 	EventLoopGroup workerGroup;
 	ChannelFuture future;
+
 	Client() {
-		data = new Message();
+		message = new Message();
 		channelMap = new HashMap<Integer,ChannelFuture>();
 		workerGroup = new NioEventLoopGroup();
 	}
 
 	public void sendMessage (ChannelFuture future,int destination_Node,int nodeID,int clockTime,String msg) {
 		System.out.println("Sending message to " + destination_Node);
-		data.setSender(nodeID);
-		data.setClockTime(clockTime);
-		data.setMessage(msg);
-		future.channel().writeAndFlush(data);
+		message.setSender(nodeID);
+		message.setClockTime(clockTime);
+		message.setMessage(msg);
+		future.channel().writeAndFlush(message);
 	}
-
 
 	public void run(int nodeID,int destination_Node, int destination_Port,Tree tree, int clockTime,String msg)  throws InterruptedException {
 		if(channelMap.containsKey(destination_Node)) {
