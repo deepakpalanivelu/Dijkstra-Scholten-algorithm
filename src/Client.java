@@ -17,7 +17,6 @@ public class Client {
 
 	Message data;
 	private Map<Integer,ChannelFuture> channelMap; 
-	//SocketChannel channel;
 	EventLoopGroup workerGroup;
 	ChannelFuture future;
 	Client() {
@@ -59,7 +58,6 @@ public class Client {
 			}
 			channelMap.put(destination_Node,future);
 			sendMessage(future,destination_Node,nodeID,clockTime,msg);
-			
 		}
 	}
 }
