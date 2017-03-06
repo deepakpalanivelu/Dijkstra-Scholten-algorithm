@@ -34,9 +34,5 @@ public class ClientHandler extends SimpleChannelInboundHandler<Message> {
 		cause.printStackTrace();
 		ctx.close();
 	}
-
-
-
-
 }
 
