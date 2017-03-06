@@ -1,6 +1,6 @@
 # Dijkstra-Scholten-algorithm
 # Termination Detection algorithm
-	# It is a Tree-based algorithm.
+ It is a Tree-based algorithm.
 	Algorithm : 
 	
 	# The INITIATOR is the root of tree.
