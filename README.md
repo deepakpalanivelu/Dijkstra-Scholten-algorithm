@@ -1,6 +1,8 @@
 # Dijkstra-Scholten-algorithm
 # Termination Detection algorithm
 	# It is a Tree-based algorithm.
+	Algorithm : 
+	
 	# The INITIATOR is the root of tree.
 	# On receiving first message: process joins tree by becoming child of message sender.
 	# On receiving subsequent messages: process sends ACK to message sender.
