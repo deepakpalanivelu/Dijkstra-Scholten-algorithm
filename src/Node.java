@@ -22,8 +22,8 @@ public class Node {
 		System.out.println("Enter the Node ID:");
 		nodeID = Integer.parseInt(inFromUser.readLine());
 		tree.setNodeID(nodeID);
-		try {
 
+		try {
 			input = getClass().getClassLoader().getResourceAsStream("config.properties");
 			// load a properties file
 			prop.load(input);
@@ -50,7 +50,7 @@ public class Node {
 							Thread.sleep(1000);
 						}
 					}
-					
+
 					if(words[1].equals("SEND")) {
 						System.out.println("___________SEND EVENT_________________");
 						System.out.println("Before the event  clock value = " + clock.getClockTime());
@@ -78,6 +78,7 @@ public class Node {
 						int parentID = tree.getParent();
 						int parent_port = Integer.parseInt(prop.getProperty(Integer.toString(parentID)));
 						System.out.println("The Parent for the node "+nodeID+  " is =" + parentID);
+
 						if(nodeID != parentID) {
 							System.out.println("Clock before the event" + clock.getClockTime());
 							clock.tick(clock.getClockTime());
@@ -86,8 +87,8 @@ public class Node {
 							tree.setParent(-1);
 							tree.setState("IDLE");
 							System.out.println("NODE " + nodeID+ " IS IDLE");
-
 						}
+
 						else {
 							clock.tick(clock.getClockTime());
 							tree.setParent(-1);
@@ -100,8 +101,6 @@ public class Node {
 			buffer.close();
 			server1.future.channel().closeFuture().sync();
 			client1.future.channel().closeFuture().sync();
-			
-
 		}
 		finally {
 			if (input != null) {
@@ -114,9 +113,9 @@ public class Node {
 			server1.workerGroup.shutdownGracefully();
 			server1.bossGroup.shutdownGracefully();
 			client1.workerGroup.shutdownGracefully();
-			
 		}
 	}
+
 	public static void main(String [] args) throws NumberFormatException, InterruptedException, IOException {
 		Node node = new Node();
 		node.run();
