@@ -38,7 +38,7 @@ public class Node {
 						System.out.println("Node " +nodeID+" Initiated the Termination Detection Algorithm");
 						tree.setParent(nodeID);
 						tree.setState("Active");
-						System.out.println("State =" + tree.getState());
+						System.out.println(" State = " + tree.getState());
 					}
 					// waiting for the node to be active 
 					while(true) {
