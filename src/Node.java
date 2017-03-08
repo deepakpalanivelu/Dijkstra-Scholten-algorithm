@@ -29,7 +29,7 @@ public class Node {
 			prop.load(input);
 			int port = Integer.parseInt(prop.getProperty(Integer.toString(nodeID)));
 			server1.run(port,clock,tree);
-			BufferedReader buffer = new BufferedReader(new FileReader("/Users/deepakrtp/Documents/Consistency/DjikstraSchloten/src/main/resources/Simulate.txt"));
+			BufferedReader buffer = new BufferedReader(new FileReader("Simulate.txt"));
 			while( (fromFile = buffer.readLine()) != null) {
 				words = fromFile.split(" ");
 				if(nodeID == Integer.parseInt(words[0])) {
