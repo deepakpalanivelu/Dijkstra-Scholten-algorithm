@@ -18,5 +18,8 @@
 
 | Event | Description |
 | --- | --- |
-| INITIATOR | This is the initiator node changes the state to active |
+| INITIATOR | Initiates the termination detection algorithm |
 | SEND| Send a message to node given in param. |
+| IDLE | The node becomes idle and sends an ACK to its parent | 
+
+Once the initiator detects the termination of the computation, it displays proper messages and quits
