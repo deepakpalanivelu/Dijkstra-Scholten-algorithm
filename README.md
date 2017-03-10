@@ -12,3 +12,11 @@
 		Process sends ACK (for first message) to its parent.
 		Process detaches itself from tree.
 	 Termination: When the initiator is idle and has no outstanding ACKs
+	 
+	 
+	 You are given a file that contains a series of events that should be simulated on the nodes. The program reads these events from the file and executes them on corresponding nodes.Each line of the file represents an event that is denoted by a tuple<Nodeid,Event,parameter> ; where: nodeid is the node where the event should occu, Event is the type of event that should occur and parameter specifies to which node it sends the message to. The types of the event could be one of the following:
+
+| Event | Description |
+| --- | --- |
+| INITIATOR | This is the initiator node changes the state to active |
+| SEND| Send a message to node given in param. |
