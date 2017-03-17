@@ -8,8 +8,7 @@ public class Node {
 	private int nodeId;
 	private String state;
 	private int parentNode;
-	int portNo;
-
+	private int portNo;
 	private int msgCount;
 	private int ackCount;
 	Server server;
@@ -18,7 +17,6 @@ public class Node {
 	Clock clock;
 	Properties prop = new Properties();
 	InputStream input = null;
-	
 	
 	Node(int nodeId) {
 		msgCount = 0;
@@ -37,10 +35,36 @@ public class Node {
 		server = new Server(portNo,clock,node);
 		clientManager = new ClientManager(node);
 	}
+	
+	public void sendMessage(int nodeId ,int destinationNode,String msg) throws InterruptedException {
+
+		System.out.println("Clock before the event " +clock.getClockTime());
+		int destinationPort = Integer.parseInt(prop.getProperty(Integer.toString(destinationNode)));
+		clock.tick(clock.getClockTime());
+		clientManager.run(nodeId,destinationNode,destinationPort,clock.getClockTime(),msg);
+		System.out.println("Clock After the event " +clock.getClockTime());
+		
+	}
+
+	public void checkIdle () throws InterruptedException {
+		if(node.getAckCount() == node.getMsgCount() && node.getState().equals("Inactive")) {
+			if(node.getNodeId() != node.getParent()) {
+				node.sendMessage(nodeId,getParent(),"Ack");
+				node.setState("IDLE");
+				node.setParent(-1);
+				System.out.println("node " + node.getNodeId() + " is idle");
+
+			}
+			else {
+				System.out.println(" Termination Detection Finished ");
+			}
+		}
+	}
 
 	public int getNodeId() {
 		return this.nodeId;
 	}
+	
 	public void setMsgCount(int msgCount) {
 		this.msgCount = msgCount;
 	}
@@ -79,32 +103,5 @@ public class Node {
 	public int getParent() {
 		return this.parentNode;
 	}
-
-	
-	public void sendMessage(int nodeId ,int destinationNode,String msg) throws InterruptedException {
-
-		System.out.println("Clock before the event " +clock.getClockTime());
-		int destinationPort = Integer.parseInt(prop.getProperty(Integer.toString(destinationNode)));
-		clock.tick(clock.getClockTime());
-		clientManager.run(nodeId,destinationNode,destinationPort,clock.getClockTime(),msg);
-		System.out.println("Clock After the event " +clock.getClockTime());
-		
-	}
-
-	public void checkIdle () throws InterruptedException {
-		if(node.getAckCount() == node.getMsgCount() && node.getState().equals("Inactive")) {
-			if(node.getNodeId() != node.getParent()) {
-				node.sendMessage(nodeId,getParent(),"Ack");
-				node.setState("IDLE");
-				node.setParent(-1);
-				System.out.println("node " + node.getNodeId() + " is idle");
-
-			}
-			else {
-				System.out.println(" Termination Detection Finished ");
-			}
-		}
-	}
-
 }
 
