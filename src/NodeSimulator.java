@@ -26,7 +26,7 @@ public class NodeSimulator {
 		node.setup(node);
 
 		// to read from file 
-		BufferedReader buffer = new BufferedReader(new FileReader("/Users/deepakrtp/Documents/Consistency/Terminationdetection/src/main/resources/Simulate.txt"));
+		BufferedReader buffer = new BufferedReader(new FileReader("Simulate.txt"));
 		while( (fromFile = buffer.readLine()) != null) {
 			split = fromFile.split(" ");
 			if(nodeId == Integer.parseInt(split[0])) {
