@@ -37,14 +37,14 @@ public class ClientManager {
 		}
 		else { 
 			
-			final Node nodeCopy = node;
+			final Node nodes = node;
 			Bootstrap clientbootstrap = new Bootstrap();
 			clientbootstrap.group(workerGroup);
 			clientbootstrap.channel(NioSocketChannel.class);
 			clientbootstrap.handler(new ChannelInitializer<SocketChannel>() {
 				@Override
 				public void initChannel(SocketChannel ch) throws Exception {
-					ch.pipeline().addLast(new ObjectEncoder(),new ObjectDecoder(ClassResolvers.weakCachingResolver(Message.class.getClassLoader())),new ClientHandler(nodeCopy));
+					ch.pipeline().addLast(new ObjectEncoder(),new ObjectDecoder(ClassResolvers.weakCachingResolver(Message.class.getClassLoader())),new ClientHandler(nodes));
 				}
 			});
 			Thread.sleep(10000);

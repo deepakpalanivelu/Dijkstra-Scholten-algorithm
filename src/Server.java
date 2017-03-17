@@ -20,7 +20,7 @@ public class Server {
 		workerGroup = new NioEventLoopGroup(2);
 
 		final Clock clock1 = clock;
-		final Node nodeCopy = node;
+		final Node nodes = node;
 		ServerBootstrap server = new ServerBootstrap();
 		server.group(bossGroup,workerGroup);
 		server.channel(NioServerSocketChannel.class);
@@ -28,7 +28,7 @@ public class Server {
 			@Override
 			protected void initChannel(SocketChannel ch) throws Exception {
 				// TODO Auto-generated method stub
-				ch.pipeline().addLast(new ObjectEncoder(),new ObjectDecoder(ClassResolvers.weakCachingResolver(Message.class.getClassLoader())),new ServerHandler(clock1,nodeCopy));
+				ch.pipeline().addLast(new ObjectEncoder(),new ObjectDecoder(ClassResolvers.weakCachingResolver(Message.class.getClassLoader())),new ServerHandler(clock1,nodes));
 			}
 		});
 		server.option(ChannelOption.SO_BACKLOG, 128);
