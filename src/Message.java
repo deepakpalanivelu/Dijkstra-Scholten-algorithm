@@ -1,4 +1,4 @@
-package djikstraSchloten;
+package terminationDetection;
 
 import java.io.Serializable;
 
