@@ -1,4 +1,4 @@
-package djikstraSchloten;
+package terminationDetection;
 
 public class Clock {
 

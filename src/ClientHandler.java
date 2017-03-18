@@ -1,31 +1,30 @@
-package djikstraSchloten;
+package terminationDetection;
 
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 
 
 public class ClientHandler extends SimpleChannelInboundHandler<Message> {
-	Tree tree;
-	ClientHandler(Tree tree) {
-		this.tree = tree;
-	}
 
+	Node node;
+	ClientHandler(Node node) {
+		this.node = node;
+	}
 	@Override
 	public void channelRead0(ChannelHandlerContext ctx, Message msg) throws Exception {
-		// TODO Auto-generated method stub
-		System.out.println("ACK RECIEVED FROM" + msg.getSender()+ "is"+ msg.getMessage() );
-		tree.setAckCount(tree.getAckCount() + 1);
+		System.out.println("_________________________");
+		System.out.println("ACK RECIEVED FROM" + msg.getSender());
+		node.setAckCount(node.getAckCount() + 1);
+		node.checkIdle();	
 	}
 
 	@Override
 	public void channelActive(ChannelHandlerContext ctx) throws Exception {
-		// TODO Auto-generated method stub
 		super.channelActive(ctx);
 	}
 
 	@Override
 	public void channelInactive(ChannelHandlerContext ctx) throws Exception {
-		// TODO Auto-generated method stub
 		super.channelInactive(ctx);
 	}
 

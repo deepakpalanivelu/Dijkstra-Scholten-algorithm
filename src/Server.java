@@ -1,4 +1,4 @@
-package djikstraSchloten;
+package terminationDetection;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
@@ -14,14 +14,13 @@ public class Server {
 	EventLoopGroup bossGroup;
 	EventLoopGroup workerGroup;
 	ChannelFuture future;
-	Server() {
+	Server(int port, Clock clock,Node node) throws InterruptedException {
+
 		bossGroup = new NioEventLoopGroup(1);
 		workerGroup = new NioEventLoopGroup(2);
-	}
 
-	public void run (int port, Clock clock ,Tree tree) throws InterruptedException {
 		final Clock clock1 = clock;
-		final Tree tree1 = tree;
+		final Node nodes = node;
 		ServerBootstrap server = new ServerBootstrap();
 		server.group(bossGroup,workerGroup);
 		server.channel(NioServerSocketChannel.class);
@@ -29,7 +28,7 @@ public class Server {
 			@Override
 			protected void initChannel(SocketChannel ch) throws Exception {
 				// TODO Auto-generated method stub
-				ch.pipeline().addLast(new ObjectEncoder(),new ObjectDecoder(ClassResolvers.weakCachingResolver(Message.class.getClassLoader())),new ServerHandler(clock1,tree1));
+				ch.pipeline().addLast(new ObjectEncoder(),new ObjectDecoder(ClassResolvers.weakCachingResolver(Message.class.getClassLoader())),new ServerHandler(clock1,nodes));
 			}
 		});
 		server.option(ChannelOption.SO_BACKLOG, 128);
@@ -37,7 +36,6 @@ public class Server {
 		future = server.bind(port).sync();
 		if(future.isSuccess()) {
 			System.out.println("Server with port number " +port +" started");
-
 		}
 	}
 }

@@ -1,18 +1,49 @@
-package djikstraSchloten;
+package terminationDetection;
 
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 
 public class ServerHandler extends SimpleChannelInboundHandler<Message> {
 	Clock clock;
-	Tree tree;
-	String state;
-	
-	ServerHandler(Clock clock,Tree tree) {
-		this.clock = clock;
-		this.tree = tree;
-	}
+	Node node;
 
+	String state;
+
+	ServerHandler(Clock clock, Node node) {
+		this.clock = clock;
+		this.node = node;
+	}
+	@Override
+	protected void channelRead0(ChannelHandlerContext ctx, Message msg) throws Exception {
+		if(msg.getMessage().equals("Ack")) {
+			node.setAckCount(node.getAckCount() + 1);
+			System.out.println("Ack recieved from child  "+ msg.getSender());
+			node.checkIdle();
+		}
+
+		else {
+			System.out.println("Clock before the event" +clock.getClockTime());
+			System.out.println("_____________RECIEVE EVENT______________");
+			System.out.println("-----------------------------------------");
+			System.out.println("message recieved from " + msg.getSender() +" with time stamp  " + msg.getClockTime());
+			clock.tick(msg.getClockTime());
+			System.out.println("Clock after the event " +clock.getClockTime());
+
+			if(node.getState().equals("IDLE")) {
+				// if the node was idle it won't send the ack immediately
+				node.setParent(msg.getSender());
+				System.out.println(node.getNodeId() + " Parent = "  + node.getParent());
+				node.setState("ACTIVE");
+			}
+			else {
+				// if the node is active it sends Ack immediately
+				msg.setSender(node.getNodeId());
+				msg.setMessage("ACK");
+				ctx.writeAndFlush(msg);		
+				System.out.println("Ack Sent to " + node.getNodeId());
+			}
+		}
+	}
 	@Override
 	public void channelActive(ChannelHandlerContext ctx) throws Exception {
 		super.channelActive(ctx);
@@ -21,35 +52,6 @@ public class ServerHandler extends SimpleChannelInboundHandler<Message> {
 	@Override
 	public void channelInactive(ChannelHandlerContext ctx) throws Exception {
 		super.channelInactive(ctx);
-	}
-
-	@Override
-	protected void channelRead0(ChannelHandlerContext ctx, Message msg) throws Exception {
-		if(msg.getMessage().equals("IDLE")) {
-			System.out.println("Ack recieved from child  "+ msg.getSender());
-			tree.setAckCount(tree.getAckCount() + 1);
-		}
-
-		else {
-			System.out.println("clock before updating" +clock.getClockTime());
-			System.out.println("_____________RECIEVE EVENT______________");
-			System.out.println("-----------------------------------------");
-			System.out.println("message recieved from " + msg.getSender() +" at = " + msg.getClockTime());
-			System.out.println("State ");
-			clock.tick(msg.getClockTime());
-
-			if(tree.getState().equals("ACTIVE")) {
-				msg.setSender(tree.getNodeID());
-				msg.setMessage("ACK");
-				ctx.writeAndFlush(msg);
-			}
-			else if(tree.getState().equals("IDLE")) {
-				tree.setParent(msg.getSender());
-				System.out.println("from server Parent =" + tree.getParent());
-				tree.setState("ACTIVE");
-			}
-		}
-		System.out.println("clock after updating" + clock.getClockTime());
 	}
 
 	@Override 
