@@ -1,64 +1,79 @@
+
 package terminationDetection;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 
-
+/**
+ * Termination Detection
+ * NodeSimulator.java
+ * Purpose: To simulate the events on the node from a file.
+ */
+enum Events {
+	INITIATOR,
+	SEND
+}
 public class NodeSimulator {
 	Node node;
-	private int nodeId;
 	int portNo;
 
-	public void run() throws IOException, InterruptedException {
 
+	/**
+	 * This method is used to simulate the events 
+	 * on the node from the file. 
+	 * @param file - path to the file name
+	 * @param nodeId - identifier of the node
+	 */
+	public void execute(String file,int nodeId) throws IOException, InterruptedException {
 
-		String fromFile , split[];
-		BufferedReader inFromUser = new BufferedReader(new InputStreamReader(System.in));
-
-		System.out.println(" Enter the node id :");
-		nodeId = Integer.parseInt(inFromUser.readLine());
-
-
-		// calling the node to start up the server and client 
+		String event;
+		/** calling the node class to set up the node propertied and start up the server and client of that node */
 		node = new Node(nodeId);
 		node.setup(node);
-
-		// to read from file 
-		BufferedReader buffer = new BufferedReader(new FileReader("Simulate.txt"));
-		while( (fromFile = buffer.readLine()) != null) {
-			split = fromFile.split(" ");
-			if(nodeId == Integer.parseInt(split[0])) {
-
-				// Initiate event
-				if(split[1].equals("INITIATOR")) {
+		BufferedReader buffer = new BufferedReader(new FileReader(file));
+		while( (event = buffer.readLine()) != null) {
+			String eventComponents [] = event.split(" ");
+			if(nodeId == Integer.parseInt(eventComponents[0])) {
+				
+				/** Initiate Event */
+				if(eventComponents[1].equals(Events.INITIATOR.name())) {
 					System.out.println("Node " +nodeId+" Initiated the Termination Detection Algorithm");
 					node.setParent(nodeId);
-					node.setState("Active");
-				}
-				while(true) {
-					if(node.isActive()) {
-						break;
-					}
-					else {
-						Thread.sleep(5);
-					}
+					node.setState(State.ACTIVE);
 				}
 
-					// Send event
-				if(split[1].equals("SEND")) {
+				/** Send Event */
+				else if (eventComponents[1].equals(Events.SEND.name())) {
+					/** Checking if node active if not waits until active */
+					while(true) {
+						if(node.isActive()) {
+							break;
+						}
+						else {
+							Thread.sleep(5);
+						}
+					}
 					System.out.println("_____________SEND EVENT__________________");
-					int destinationNodeId = Integer.parseInt(split[2]);
-					node.sendMessage(nodeId, destinationNodeId,split[1]);
+					int destinationNodeId = Integer.parseInt(eventComponents[2]);
+					node.sendMessage(nodeId, destinationNodeId,eventComponents[1]);
 				}
 			}
 		}
-		node.setState("Inactive");
+		/** Set state to inactive if all the required events are done by node */
+		node.setState(State.INACTIVE);
 		buffer.close();
 	}
+
+	/**
+	 * The main method begins here  .
+	 * @param args[0] - path to the file
+	 * @param args[1] - Identifier for the node
+	 * @author - deepakrtp 			
+	 */
 	public static void main(String args[]) throws IOException, InterruptedException {
+
 		NodeSimulator nodeSimulator = new NodeSimulator();
-		nodeSimulator.run();
+		nodeSimulator.execute(args[0],Integer.parseInt(args[1]));
 	}
 }
